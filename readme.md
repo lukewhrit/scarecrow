@@ -4,36 +4,40 @@ Scarecrow is a simple static site generator.
 
 The entire idea behind Scarecrow is that it **stays out of your way**. Often static site generators are just far too complex, including plethoras of features and folders that you really don't need.
 
+**Abilities/Features:**
+
 * Easy to customize.
 * Allows you to write your site's content in Markdown. 
 * Built-in blogging support.
-* Supports Handlebars templating in Markdown.
-* Compiles down to purely static files.
+* Supports Go's `html/template` in Markdown.
+* Compiles down to purely static files; JavaScript-free.
 
 ## Installation
 
-Scarecrow is currently unpublished, but when it is it will be available via NPM and could be installed with this command:
+Scarecrow is currently unpublished, but when it is it will be available via the Go tool-chain and could be installed with this command:
 
-```command
-$ npm install -g @lukewhrit/scarecrow
+```
+$ go get -v -u github.com/lukewhrit/scarecrow
 ```
 
 ## Usage
 
 ```
 $ scarecrow --help
+Scarecrow is a modern and simple static site generator
 
-  🐦 Scarecrow is a simple static site generator
+Usage:
+  scarecrow [command]
 
-  Usage
-    $ foo <input>
+Available Commands:
+  help        Help about any command
+  make        Compile a Scarecrow project
 
-  Options
-    --rainbow, -r  Include a rainbow
+Flags:
+  -h, --help      help for scarecrow
+  -v, --version   version for scarecrow
 
-  Examples
-    $ foo unicorns --rainbow
-    🌈 unicorns 🌈
+Use "scarecrow [command] --help" for more information about a command.
 ```
 
 ## Directory Structure
@@ -42,8 +46,6 @@ Scarecrow uses a very simple directory structure that allows for easy customizat
 
 ```
 .
- ├── assets/
- │    └── logo.jpg
  ├── posts/
  │    └── hello-world.md
  ├── pages/
@@ -53,11 +55,19 @@ Scarecrow uses a very simple directory structure that allows for easy customizat
  └── layout.html
 ```
 
+`pages/index.md` is pretty plain, `layout.html` however has some special things going on with it. `layout.html` serves as the base HTML file for all content on your site. You should define the styles and layout of your site here.
+
+Scarecrow will inject your sites content into this file where it finds a `<scarecrow-body />` tag.
+
+Scarecrow does not yet support custom layouts per file. We are interested in possibly implementing this in the future.
+
 ## Contributors
 
-Scarecrow is built entirely from contributors to the Open-Source community.
+Scarecrow is built entirely from contributors to the Open-Source community. Here are some of the notable contributors to Scarecrow:
 
 * [Luke Whrit <lukewhrit@gmail.com>](https://github.com/lukewhrit) - Lead developer and maintainer.
+
+Scarecrow is **not** supported by and has no interest in pandering to any corporation.
 
 ## License
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Luke Whrit
+ * Copyright © 2020 Luke Whrit <lukewhrit@gmail.com>
 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import meow from 'meow'
-import { Compiler } from './compile'
 
-const cli = meow(`
-  Usage
-    $ scarecrow <directory> [flags]
+package main
 
-  Options
-    --help, -h     Display this message.
-    --version, -v  Display a message containing the current Scarecrow version.
+import "github.com/lukewhrit/scarecrow/cmd"
 
-  Examples
-    $ scarecrow ./
-    -> Successfully generated project "".
-`, {
-  flags: {
-    clean: {
-      type: 'boolean',
-      alias: 'c',
-      default: false
-    }
-  }
-})
-
-new Compiler(cli.input, cli.flags).compile('')
+func main() {
+	cmd.Execute()
+}
