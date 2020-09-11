@@ -18,7 +18,13 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"path/filepath"
+	"strings"
 
+	"github.com/russross/blackfriday/v2"
 	"github.com/spf13/cobra"
 )
 
@@ -27,8 +33,43 @@ var makeCmd = &cobra.Command{
 	Short: "Compile a Scarecrow project",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Hello, world!")
-		fmt.Println(args[0])
+		dir, err := filepath.Abs(args[0])
+
+		if err != nil {
+			log.Fatalf(err.Error())
+		}
+
+		files := []string{}
+		// Loop over files in provided path and add to array
+		if err := filepath.Walk(dir, func(path string, f os.FileInfo, err error) error {
+			files = append(files, path)
+
+			return err
+		}); err != nil {
+			log.Fatalf(err.Error())
+		}
+
+		for _, file := range files {
+			info, err := os.Stat(file)
+
+			if err != nil {
+				log.Fatalf(err.Error())
+			}
+
+			// Make sure we don't include directories
+			if !info.IsDir() {
+				content, err := ioutil.ReadFile(file)
+
+				if err != nil {
+					log.Fatalf(err.Error())
+				}
+
+				if strings.HasSuffix(file, ".md") {
+					fmt.Printf("%s ---\n", info.Name())
+					fmt.Println(string(blackfriday.Run(content)))
+				}
+			}
+		}
 	},
 }
 

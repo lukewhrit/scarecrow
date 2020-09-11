@@ -61,6 +61,13 @@ Scarecrow will inject your sites content into this file where it finds a `<scare
 
 Scarecrow does not yet support custom layouts per file. We are interested in possibly implementing this in the future.
 
+## TODO
+
+* [ ] Blogging support
+* [ ] Use `layout.html` to determine file content and output to a `dist/` directory
+* [ ] Pass to `html/template` before outputting
+* [ ] Front matter support and parsing
+
 ## Contributors
 
 Scarecrow is built entirely from contributors to the Open-Source community. Here are some of the notable contributors to Scarecrow:
