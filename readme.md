@@ -4,7 +4,7 @@ Scarecrow is a simple static site generator.
 
 The entire idea behind Scarecrow is that it **stays out of your way**. Often static site generators are just far too complex, including plethoras of features and folders that you really don't need.
 
-**Abilities/Features:**
+**Abilities and Features:**
 
 * Easy to customize.
 * Allows you to write your site's content in Markdown. 
@@ -67,6 +67,7 @@ Scarecrow does not yet support custom layouts per file. We are interested in pos
 * [ ] Use `layout.html` to determine file content and output to a `dist/` directory
 * [ ] Pass to `html/template` before outputting
 * [ ] Front matter support and parsing
+* [ ] HTML output minifying
 
 ## Contributors
 
