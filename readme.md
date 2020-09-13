@@ -14,7 +14,7 @@ The entire idea behind Scarecrow is that it **stays out of your way**. Often sta
 
 ## Installation
 
-Scarecrow is currently unpublished, but when it is it will be available via the Go tool-chain and could be installed with this command:
+Scarecrow isn't yet in a usable state. However, you may still install the CLI via the Go CLI using this command:
 
 ```
 $ go get -v -u github.com/lukewhrit/scarecrow
