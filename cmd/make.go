@@ -28,7 +28,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var dryRun bool
 var clean bool
 var output string
 
@@ -38,10 +37,7 @@ var makeCmd = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		dir, err := filepath.Abs(args[0])
-
-		if err != nil {
-			log.Fatalf(err.Error())
-		}
+		handle(err)
 
 		files := []string{}
 		// Loop over files in provided path and add to array
@@ -57,20 +53,14 @@ var makeCmd = &cobra.Command{
 
 		for _, file := range files {
 			info, err := os.Stat(file)
-
-			if err != nil {
-				log.Fatalf(err.Error())
-			}
+			handle(err)
 
 			// Make sure we don't include directories
 			if !info.IsDir() {
 				// Only use files with the correct extension/name
 				if strings.HasSuffix(file, ".md") || info.Name() == "layout.html" {
 					content, err := ioutil.ReadFile(file)
-
-					if err != nil {
-						log.Fatalf(err.Error())
-					}
+					handle(err)
 
 					// If file is layout don't run blackfriday on it
 					if info.Name() == "layout.html" {
@@ -80,24 +70,20 @@ var makeCmd = &cobra.Command{
 					}
 
 					if strings.HasSuffix(file, ".md") {
-						if dryRun {
-							fmt.Printf("----- %s \n", info.Name())
-							fmt.Println(string(fileContents[info.Name()]))
-						} else {
-							content := strings.Replace(
-								string(fileContents["layout.html"]),
-								"<scarecrow-body />",
-								string(fileContents[info.Name()]),
-								1)
+						pathItems := strings.Split(file, string(filepath.Separator))
+						// Get second item in array
+						// This value will most likely be the bottom-level folder the files are in
+						folder := pathItems[len(pathItems)-2]
+						subdir := ""
 
-							err := ioutil.WriteFile(
-								strings.Replace(file, ".md", ".html", 1),
-								[]byte(content),
-								0600)
+						if folder == "pages" {
+							subdir = ""
+						} else if folder == "posts" {
+							subdir = "posts"
+						}
 
-							if err != nil {
-								log.Fatalf(err.Error())
-							}
+						if err := writeFile(fileContents, dir, subdir, info.Name()); err != nil {
+							log.Fatal(err.Error())
 						}
 					}
 				}
@@ -109,7 +95,26 @@ var makeCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(makeCmd)
 
-	makeCmd.Flags().BoolVarP(&dryRun, "dry-run", "d", false, "only output to stdout")
 	makeCmd.Flags().BoolVarP(&clean, "clean", "c", true, "cleanup directory before saving new output")
 	makeCmd.Flags().StringVarP(&output, "output", "o", "./dist", "send output to a custom directory")
+}
+
+func handle(err error) {
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+}
+
+func writeFile(fileContents map[string][]byte, dir, subdir, name string) error {
+	content := strings.Replace(
+		string(fileContents["layout.html"]),
+		"<scarecrow-body />",
+		string(fileContents[name]),
+		1)
+
+	outputFile := fmt.Sprintf("%s/dist/%s/%s", dir,
+		subdir,
+		strings.ReplaceAll(name, ".md", ".html"))
+
+	return ioutil.WriteFile(outputFile, []byte(content), 0600)
 }

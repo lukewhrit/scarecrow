@@ -64,7 +64,7 @@ Scarecrow does not yet support custom layouts per file. We are interested in pos
 ## TODO
 
 * [ ] Blogging support
-* [ ] Use `layout.html` to determine file content and output to a `dist/` directory
+* [X] Use `layout.html` to determine file content and output to a `dist/` directory
 * [ ] Pass to `html/template` before outputting
 * [ ] Front matter support and parsing
 * [ ] HTML output minifying
