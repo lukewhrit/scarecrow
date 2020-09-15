@@ -60,7 +60,7 @@ var makeCmd = &cobra.Command{
 					content, err := ioutil.ReadFile(file)
 					util.Handle(err)
 
-					// If file is layout don't run blackfriday on it
+					// If file is of type HTML don't run blackfriday on it
 					if strings.HasSuffix(info.Name(), ".html") {
 						minifiedContent, err := util.MinifyHTML(content)
 						util.Handle(err)
