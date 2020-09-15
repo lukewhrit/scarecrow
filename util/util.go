@@ -18,7 +18,7 @@ func Handle(err error) {
 func WriteFile(fileContents map[string][]byte, dir, subdir, name string) error {
 	content := strings.Replace(
 		string(fileContents["layout.html"]),
-		"<scarecrow-body />",
+		"<scarecrow-body>",
 		string(fileContents[name]),
 		1)
 

@@ -64,9 +64,15 @@ var makeCmd = &cobra.Command{
 
 					// If file is layout don't run blackfriday on it
 					if info.Name() == "layout.html" {
-						fileContents[info.Name()] = content
+						minified, err := util.MinifyHTML(content)
+						util.Handle(err)
+
+						fileContents[info.Name()] = minified
 					} else {
-						fileContents[info.Name()] = blackfriday.Run(content)
+						minified, err := util.MinifyHTML(blackfriday.Run(content))
+						util.Handle(err)
+
+						fileContents[info.Name()] = minified
 					}
 
 					if strings.HasSuffix(file, ".md") {
