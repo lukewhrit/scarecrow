@@ -1,5 +1,7 @@
 # 🐦 Scarecrow
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/lukewhrit/scarecrow)](https://goreportcard.com/report/github.com/lukewhrit/scarecrow) [![Documentation](https://pkg.go.dev/badge/github.com/lukewhrit/scarecrow)](https://pkg.go.dev/github.com/lukewhrit/scarecrow)
+
 Scarecrow is a simple static site generator.
 
 The entire idea behind Scarecrow is that it **stays out of your way**. Often static site generators are just far too complex, including plethoras of features and folders that you really don't need.
@@ -54,9 +56,9 @@ Scarecrow uses a very simple directory structure that allows for easy customizat
  └── layout.html
 ```
 
-`pages/index.md` is pretty plain, `layout.html` however has some special things going on with it. `layout.html` serves as the base HTML file for all content on your site. You should define the styles and layout of your site here.
+`pages/index.md` is pretty ordinary, `layout.html` however has some special things going on with it. `layout.html` serves as the base HTML file for all content on your site. You should define the styles and layout of your site here.
 
-Scarecrow will inject your sites content into this file where it finds a `<scarecrow-body>` or `<scarecrow-body />` tag.
+Scarecrow will inject your sites content into this file wherever it finds a `<scarecrow-body>` or `<scarecrow-body />` tag.
 
 Scarecrow does not yet support custom layouts per file. We are interested in possibly implementing this in the future.
 
@@ -78,4 +80,4 @@ Scarecrow is **not** supported by and has no interest in pandering to any corpor
 
 ## License
 
-Scarecrow is publicly available under the terms of the [Apache license v2.0](license).
+Scarecrow is available to the public under the terms of the [Apache license v2.0](license).
