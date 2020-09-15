@@ -14,7 +14,7 @@ The entire idea behind Scarecrow is that it **stays out of your way**. Often sta
 
 ## Installation
 
-Scarecrow isn't yet in a usable state. However, you may still install the CLI via the Go CLI using this command:
+Scarecrow is alpha software, it shouldn't be used in production. However, you can still install Scarecrow right now and use it if you wish. Use this command: 
 
 ```
 $ go get -v -u github.com/lukewhrit/scarecrow
@@ -50,14 +50,13 @@ Scarecrow uses a very simple directory structure that allows for easy customizat
  │    └── hello-world.md
  ├── pages/
  │    ├── contact.md
- │    ├── projects.md
  │    └── index.md
  └── layout.html
 ```
 
 `pages/index.md` is pretty plain, `layout.html` however has some special things going on with it. `layout.html` serves as the base HTML file for all content on your site. You should define the styles and layout of your site here.
 
-Scarecrow will inject your sites content into this file where it finds a `<scarecrow-body />` tag.
+Scarecrow will inject your sites content into this file where it finds a `<scarecrow-body>` or `<scarecrow-body />` tag.
 
 Scarecrow does not yet support custom layouts per file. We are interested in possibly implementing this in the future.
 
@@ -67,7 +66,7 @@ Scarecrow does not yet support custom layouts per file. We are interested in pos
 * [X] Use `layout.html` to determine file content and output to a `dist/` directory
 * [ ] Pass to `html/template` before outputting
 * [ ] Front matter support and parsing
-* [ ] HTML output minifying
+* [X] HTML output minifying
 
 ## Contributors
 
