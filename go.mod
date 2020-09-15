@@ -8,3 +8,5 @@ require (
 	github.com/spf13/cobra v1.0.0
 	github.com/tdewolff/minify/v2 v2.9.4
 )
+
+replace gopkg.in/russross/blackfriday.v2 => github.com/russross/blackfriday/v2 v2.0.1
