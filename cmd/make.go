@@ -39,56 +39,56 @@ var makeCmd = &cobra.Command{
 		dir, err := filepath.Abs(args[0])
 		util.Handle(err)
 
-		files := []string{}
 		// Loop over files in provided path and add to array
+		files := []string{}
 		if err := filepath.Walk(dir, func(path string, f os.FileInfo, err error) error {
 			files = append(files, path)
-
 			return err
 		}); err != nil {
 			log.Fatalf(err.Error())
 		}
 
 		fileContents := map[string][]byte{}
-
 		for _, file := range files {
 			info, err := os.Stat(file)
 			util.Handle(err)
 
 			// Make sure we don't include directories
 			if !info.IsDir() {
-				// Only use files with the correct extension/name
-				if strings.HasSuffix(file, ".md") || info.Name() == "layout.html" {
+				// Only use files with the correct extension
+				if strings.HasSuffix(info.Name(), ".md") || strings.HasSuffix(info.Name(), ".html") {
 					content, err := ioutil.ReadFile(file)
 					util.Handle(err)
 
 					// If file is layout don't run blackfriday on it
-					if info.Name() == "layout.html" {
-						minified, err := util.MinifyHTML(content)
+					if strings.HasSuffix(info.Name(), ".html") {
+						minifiedContent, err := util.MinifyHTML(content)
 						util.Handle(err)
 
-						fileContents[info.Name()] = minified
+						fileContents[info.Name()] = minifiedContent
 					} else {
-						minified, err := util.MinifyHTML(blackfriday.Run(content))
+						minifiedContent, err := util.MinifyHTML(blackfriday.Run(content))
 						util.Handle(err)
 
-						fileContents[info.Name()] = minified
+						fileContents[info.Name()] = minifiedContent
 					}
 
 					if strings.HasSuffix(file, ".md") {
-						pathItems := strings.Split(file, string(filepath.Separator))
-						// Get second item in array
-						// This value will most likely be the bottom-level folder the files are in
-						folder := pathItems[len(pathItems)-2]
-						subdir := ""
+						path, err := filepath.Rel(dir, file)
+						util.Handle(err)
 
-						if folder == "pages" {
-							subdir = ""
-						} else if folder == "posts" {
-							subdir = "posts"
+						// Create a relative path between the * and *
+						folder := strings.Split(path, string(filepath.Separator))[0]
+						subDir := ""
+
+						switch folder {
+						case "pages":
+							subDir = ""
+						default:
+							subDir = folder
 						}
 
-						if err := util.WriteFile(fileContents, dir, subdir, info.Name()); err != nil {
+						if err := util.WriteFile(fileContents, dir, subDir, info.Name()); err != nil {
 							log.Fatal(err.Error())
 						}
 					}
