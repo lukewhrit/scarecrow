@@ -1,0 +1,4 @@
+# Text files have auto line endings
+* text=auto
+
+*.go text eol=lf
