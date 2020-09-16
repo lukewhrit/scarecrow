@@ -70,7 +70,7 @@ Scarecrow does not yet support custom layouts per file. We are interested in pos
 * [ ] Pass to `html/template` before outputting.
 * [ ] Front matter support and parsing.
 * [X] HTML output minifying.
-* [ ] Automatically create required directories on output.
+* [X] Automatically create required directories on output.
 
 ## Contributors
 
