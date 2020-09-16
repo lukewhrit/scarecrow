@@ -17,14 +17,11 @@
 package cmd
 
 import (
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
-	"strings"
 
-	"github.com/lukewhrit/scarecrow/util"
-	"github.com/russross/blackfriday/v2"
+	"github.com/lukewhrit/scarecrow/lib"
 	"github.com/spf13/cobra"
 )
 
@@ -36,61 +33,34 @@ var makeCmd = &cobra.Command{
 	Short: "Compile a Scarecrow project",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		dir, err := filepath.Abs(args[0])
-		util.Handle(err)
+		dir, err := filepath.Abs(args[0]) // Get project base directory
+		lib.Handle(err)
 
-		// Loop over files in provided path and add to array
+		// Walk project directory and add files to slice
 		files := []string{}
-		if err := filepath.Walk(dir, func(path string, f os.FileInfo, err error) error {
+		lib.Handle(filepath.Walk(dir, func(path string, f os.FileInfo, err error) error {
 			files = append(files, path)
 			return err
-		}); err != nil {
-			log.Fatalf(err.Error())
-		}
+		}))
 
-		fileContents := map[string][]byte{}
+		// Loop over every file in directory and compile
 		for _, file := range files {
 			info, err := os.Stat(file)
-			util.Handle(err)
+			lib.Handle(err)
 
-			// Make sure we don't include directories
-			if !info.IsDir() {
-				// Only use files with the correct extension
-				if strings.HasSuffix(info.Name(), ".md") || strings.HasSuffix(info.Name(), ".html") {
-					content, err := ioutil.ReadFile(file)
-					util.Handle(err)
-
-					// If file is of type HTML don't run blackfriday on it
-					if strings.HasSuffix(info.Name(), ".html") {
-						minifiedContent, err := util.MinifyHTML(content)
-						util.Handle(err)
-
-						fileContents[info.Name()] = minifiedContent
-					} else {
-						minifiedContent, err := util.MinifyHTML(blackfriday.Run(content))
-						util.Handle(err)
-
-						fileContents[info.Name()] = minifiedContent
+			// Make sure we don't try to build directories or the layout file
+			if !info.IsDir() || info.Name() != "layout.html" {
+				// Don't try to compile any files with an invalid extension, such as CSS or JS files.
+				if lib.HasExt(info.Name(), "md") {
+					doc := &lib.Document{
+						FileInfo: info,
+						Content:  []byte{},                     // Should be empty, `Compile` method will fill it in.
+						Layout:   []byte("<scarecrow-body />"), // @todo Get layout file content and place here
+						FullPath: file,
 					}
 
-					if strings.HasSuffix(file, ".md") {
-						path, err := filepath.Rel(dir, file)
-						util.Handle(err)
-
-						// Create a relative path between the * and *
-						folder := strings.Split(path, string(filepath.Separator))[0]
-						subDir := ""
-
-						switch folder {
-						case "pages":
-							subDir = ""
-						default:
-							subDir = folder
-						}
-
-						if err := util.WriteFile(fileContents, dir, subDir, info.Name()); err != nil {
-							log.Fatal(err.Error())
-						}
+					if err := doc.Compile(dir); err != nil {
+						log.Fatal(err.Error())
 					}
 				}
 			}

@@ -1,4 +1,4 @@
-package util
+package lib
 
 import (
 	"github.com/tdewolff/minify/v2"

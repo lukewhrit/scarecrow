@@ -4,7 +4,7 @@
 
 Scarecrow is a simple static site generator.
 
-The entire idea behind Scarecrow is that it **stays out of your way**. Often static site generators are just far too complex, including plethoras of features and folders that you really don't need.
+The entire idea behind Scarecrow is that it **stays out of your way**. Often static site generators are just far too complex, including a plethora of features and folders that you really don't need.
 
 **Abilities and Features:**
 
@@ -13,6 +13,7 @@ The entire idea behind Scarecrow is that it **stays out of your way**. Often sta
 * Built-in blogging support.
 * Supports Go's `html/template` in Markdown.
 * Compiles down to purely static files; JavaScript-free.
+* Fast; Scarecrow compiles sites faster than Hugo or Jekyll.
 
 ## Installation
 
@@ -64,11 +65,12 @@ Scarecrow does not yet support custom layouts per file. We are interested in pos
 
 ## TODO
 
-* [ ] Blogging support
-* [X] Use `layout.html` to determine file content and output to a `dist/` directory
-* [ ] Pass to `html/template` before outputting
-* [ ] Front matter support and parsing
-* [X] HTML output minifying
+* [ ] Blogging support.
+* [X] Use `layout.html` to determine file content and output to a `dist/` directory.
+* [ ] Pass to `html/template` before outputting.
+* [ ] Front matter support and parsing.
+* [X] HTML output minifying.
+* [ ] Automatically create required directories on output.
 
 ## Contributors
 
