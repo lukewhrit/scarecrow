@@ -21,12 +21,16 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/karrick/godirwalk"
 	"github.com/lukewhrit/scarecrow/lib"
 	"github.com/spf13/cobra"
 )
 
-var clean bool
-var output string
+var (
+	clean  bool
+	output string
+	files  []string
+)
 
 var makeCmd = &cobra.Command{
 	Use:   "make <dir>",
@@ -37,10 +41,12 @@ var makeCmd = &cobra.Command{
 		lib.Handle(err)
 
 		// Walk project directory and add files to slice
-		files := []string{}
-		lib.Handle(filepath.Walk(dir, func(path string, f os.FileInfo, err error) error {
-			files = append(files, path)
-			return err
+		lib.Handle(godirwalk.Walk(dir, &godirwalk.Options{
+			Callback: func(path string, de *godirwalk.Dirent) error {
+				files = append(files, path)
+				return nil
+			},
+			Unsorted: true,
 		}))
 
 		// Loop over every file in directory and compile
