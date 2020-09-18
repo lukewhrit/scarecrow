@@ -17,6 +17,8 @@
 package cmd
 
 import (
+	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -49,9 +51,13 @@ var makeCmd = &cobra.Command{
 			Unsorted: true,
 		}))
 
+		layout, err := ioutil.ReadFile(fmt.Sprintf("%s%slayout.html",
+			dir, string(filepath.Separator)))
+		lib.Handle(err)
+
 		// Loop over every file in directory and compile
-		for _, file := range files {
-			info, err := os.Stat(file)
+		for _, filePath := range files {
+			info, err := os.Stat(filePath)
 			lib.Handle(err)
 
 			// Make sure we don't try to build directories or the layout file
@@ -60,9 +66,9 @@ var makeCmd = &cobra.Command{
 				if lib.HasExt(info.Name(), "md") {
 					doc := &lib.Document{
 						FileInfo: info,
-						Content:  []byte{},                     // Should be empty, `Compile` method will fill it in.
-						Layout:   []byte("<scarecrow-body />"), // @todo Get layout file content and place here
-						FullPath: file,
+						Content:  []byte{}, // Should be empty, `Compile` method will fill it in.
+						Layout:   layout,
+						FullPath: filePath,
 					}
 
 					if err := doc.Compile(dir); err != nil {
