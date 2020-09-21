@@ -18,9 +18,14 @@ package lib
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
+	"strings"
 )
+
+var pathSeperator = string(filepath.Separator)
 
 // Handle handles errors
 func Handle(err error) {
@@ -47,4 +52,18 @@ func Contains(slice []string, str string) bool {
 	}
 
 	return false
+}
+
+// WriteFile writes a file to a `dir`
+func (d *Document) WriteFile(dir, subDir string) (err error) {
+	content := strings.ReplaceAll(string(d.Layout), "<scarecrow-body />", string(d.Content))
+	minifiedContent, err := MinifyHTML([]byte(content))
+	content = string(minifiedContent)
+
+	outputFolder := fmt.Sprintf("%s%sdist%s%s", dir, pathSeperator, pathSeperator, subDir)
+	outputFile := fmt.Sprintf("%s%s%s", outputFolder, pathSeperator,
+		strings.ReplaceAll(d.FileInfo.Name(), ".md", ".html"))
+
+	err = os.MkdirAll(outputFolder, os.ModePerm)
+	return ioutil.WriteFile(outputFile, []byte(content), 0600)
 }

@@ -36,7 +36,7 @@ type Document struct {
 // Compile turns a markdown document into a fully-formed HTML file using a layout
 func (d *Document) Compile(dir string) (err error) {
 	d.Content, err = ioutil.ReadFile(d.FullPath)
-	d.Content, err = MinifyHTML(blackfriday.Run(d.Content))
+	d.Content = blackfriday.Run(d.Content)
 
 	path, err := filepath.Rel(dir, d.FullPath)
 	folder := strings.Split(path, string(filepath.Separator))[0]
