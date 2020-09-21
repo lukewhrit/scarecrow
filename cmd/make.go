@@ -22,6 +22,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/karrick/godirwalk"
 	"github.com/lukewhrit/scarecrow/lib"
@@ -29,10 +30,13 @@ import (
 )
 
 var (
-	clean  bool
-	output string
-	files  []string
+	clean              bool
+	output             string
+	files              []string
+	allowedDirectories = []string{"pages", "posts"}
 )
+
+const layoutFileName = "layout.html"
 
 var makeCmd = &cobra.Command{
 	Use:   "make <dir>",
@@ -61,9 +65,18 @@ var makeCmd = &cobra.Command{
 			lib.Handle(err)
 
 			// Make sure we don't try to build directories or the layout file
-			if !info.IsDir() || info.Name() != "layout.html" {
+			if !info.IsDir() || info.Name() != layoutFileName {
 				// Don't try to compile any files with an invalid extension, such as CSS or JS files.
 				if lib.HasExt(info.Name(), "md") {
+					path, err := filepath.Rel(dir, filePath)
+					lib.Handle(err)
+
+					// Only compile files within the allowed directories
+					if !lib.Contains(allowedDirectories,
+						strings.Split(path, string(filepath.Separator))[0]) {
+						continue
+					}
+
 					doc := &lib.Document{
 						FileInfo: info,
 						Content:  []byte{}, // Should be empty, `Compile` method will fill it in.
@@ -71,6 +84,7 @@ var makeCmd = &cobra.Command{
 						FullPath: filePath,
 					}
 
+					// Compile the document
 					if err := doc.Compile(dir); err != nil {
 						log.Fatal(err.Error())
 					}

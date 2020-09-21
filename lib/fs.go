@@ -31,9 +31,11 @@ func (d *Document) WriteFile(dir, subDir string) (err error) {
 	content := strings.ReplaceAll(string(d.Layout), "<scarecrow-body />", string(d.Content))
 
 	outputFolder := fmt.Sprintf("%s%sdist%s%s", dir, pathSeperator,
-		subDir, pathSeperator)
+		pathSeperator, subDir)
 	outputFile := fmt.Sprintf("%s%s%s", outputFolder, pathSeperator,
 		strings.ReplaceAll(d.FileInfo.Name(), ".md", ".html"))
+
+	fmt.Println(outputFolder, outputFile)
 
 	err = os.MkdirAll(outputFolder, os.ModePerm)
 	return ioutil.WriteFile(outputFile, []byte(content), 0600)
