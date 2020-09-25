@@ -17,12 +17,13 @@
 package lib
 
 import (
+	"bytes"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/russross/blackfriday/v2"
+	"github.com/yuin/goldmark"
 )
 
 // Document is a Scarecrow document file
@@ -36,7 +37,10 @@ type Document struct {
 // Compile turns a markdown document into a fully-formed HTML file using a layout
 func (d *Document) Compile(dir string) (err error) {
 	d.Content, err = ioutil.ReadFile(d.FullPath)
-	d.Content = blackfriday.Run(d.Content)
+
+	var buf *bytes.Buffer
+	err = goldmark.Convert(d.Content, buf)
+	d.Content = buf.Bytes()
 
 	path, err := filepath.Rel(dir, d.FullPath)
 	folder := strings.Split(path, string(filepath.Separator))[0]
