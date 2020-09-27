@@ -24,6 +24,8 @@ import (
 	"strings"
 
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/renderer/html"
 )
 
 // Document is a Scarecrow document file
@@ -33,6 +35,16 @@ type Document struct {
 	Layout   []byte
 	FullPath string
 }
+
+var md = goldmark.New(
+	goldmark.WithExtensions(
+		extension.GFM,
+		extension.Footnote,
+	),
+	goldmark.WithRendererOptions(
+		html.WithUnsafe(),
+	),
+)
 
 // Compile turns a markdown document into a fully-formed HTML file using a layout
 func (d *Document) Compile(dir string) (err error) {
