@@ -38,8 +38,8 @@ type Document struct {
 func (d *Document) Compile(dir string) (err error) {
 	d.Content, err = ioutil.ReadFile(d.FullPath)
 
-	var buf *bytes.Buffer
-	err = goldmark.Convert(d.Content, buf)
+	var buf bytes.Buffer
+	err = goldmark.Convert(d.Content, &buf)
 	d.Content = buf.Bytes()
 
 	path, err := filepath.Rel(dir, d.FullPath)
