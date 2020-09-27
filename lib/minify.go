@@ -22,7 +22,7 @@ import (
 )
 
 // MinifyHTML runs tdedwolff/minify on a byte array consisting of HTML content
-func MinifyHTML(content []byte) ([]byte, error) {
+func MinifyHTML(content string) (string, error) {
 	m := minify.New()
 
 	m.Add("text/html", &html.Minifier{
@@ -30,5 +30,7 @@ func MinifyHTML(content []byte) ([]byte, error) {
 		KeepEndTags:      true,
 	})
 
-	return m.Bytes("text/html", content)
+	minified, err := m.String("text/html", content)
+
+	return string(minified), err
 }

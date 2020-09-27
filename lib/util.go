@@ -56,9 +56,8 @@ func Contains(slice []string, str string) bool {
 
 // WriteFile writes a file to a `dir`
 func (d *Document) WriteFile(dir, subDir string) (err error) {
-	content := strings.ReplaceAll(string(d.Layout), "<scarecrow-body />", string(d.Content))
-	minifiedContent, err := MinifyHTML([]byte(content))
-	content = string(minifiedContent)
+	content := strings.ReplaceAll(string(d.Layout), "scarecrow-body", string(d.Content))
+	content, err = MinifyHTML(content)
 
 	outputFolder := fmt.Sprintf("%s%sdist%s%s", dir, pathSeperator, pathSeperator, subDir)
 	outputFile := fmt.Sprintf("%s%s%s", outputFolder, pathSeperator,
