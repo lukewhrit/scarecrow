@@ -28,7 +28,7 @@ func CompileTemplate(name string, raw []byte) []byte {
 	Handle(err)
 
 	var compiledTemplate bytes.Buffer
-	if err := tmpl.ExecuteTemplate(&compiledTemplate, name, raw); err != nil {
+	if err := tmpl.Execute(&compiledTemplate, nil); err != nil {
 		log.Fatalf(err.Error())
 	}
 
