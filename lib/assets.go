@@ -17,7 +17,6 @@
 package lib
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -62,7 +61,6 @@ func MoveAssets(baseDir, outputDir string) (err error) {
 		info, err = os.Stat(path)
 
 		output := filepath.Join(outputDir, info.Name())
-		fmt.Println(output)
 		err = os.MkdirAll(outputDir, os.ModePerm)
 
 		return ioutil.WriteFile(output, data, os.ModePerm)
