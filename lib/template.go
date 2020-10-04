@@ -29,7 +29,7 @@ func CompileTemplate(name string, raw []byte) []byte {
 
 	var compiledTemplate bytes.Buffer
 	if err := tmpl.Execute(&compiledTemplate, nil); err != nil {
-		log.Fatalf(err.Error())
+		log.Fatal(err.Error())
 	}
 
 	return compiledTemplate.Bytes()
