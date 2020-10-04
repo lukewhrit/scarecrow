@@ -71,6 +71,7 @@ Scarecrow does not yet support custom layouts per file. We are interested in pos
 * [ ] Front matter support and parsing.
 * [X] HTML output minifying.
 * [X] Automatically create required directories on output.
+* [X] System for CSS, fonts, and JS assets.
 
 ## Contributors
 

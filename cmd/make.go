@@ -55,6 +55,13 @@ var makeCmd = &cobra.Command{
 			Unsorted: true,
 		}))
 
+		output, err = filepath.Abs(filepath.Join(dir, output))
+		lib.Handle(err)
+
+		if err := lib.MoveAssets(dir, output); err != nil {
+			log.Fatal(err.Error())
+		}
+
 		layout, err := ioutil.ReadFile(fmt.Sprintf("%s%slayout.html",
 			dir, string(filepath.Separator)))
 		lib.Handle(err)
