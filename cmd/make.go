@@ -46,10 +46,10 @@ var makeCmd = &cobra.Command{
 		dir, err := filepath.Abs(args[0]) // Get project base directory
 		lib.Handle(err)
 
-		dest, err = filepath.Abs(filepath.Join(dir, dest))
+		assetsDest, err := filepath.Abs(filepath.Join(dir, dest))
 		lib.Handle(err)
 
-		if err := lib.MoveAssets(dir, dest); err != nil {
+		if err := lib.MoveAssets(dir, assetsDest); err != nil {
 			log.Fatal(err.Error())
 		}
 
@@ -86,7 +86,7 @@ var makeCmd = &cobra.Command{
 							FullPath: path,
 						}
 
-						return doc.Compile(dir)
+						return doc.Compile(dir, dest)
 					}
 				}
 

@@ -47,7 +47,7 @@ var md = goldmark.New(
 )
 
 // Compile turns a markdown document into a fully-formed HTML file using a layout
-func (d *Document) Compile(dir string) (err error) {
+func (d *Document) Compile(dir, output string) (err error) {
 	d.Content, err = ioutil.ReadFile(d.FullPath)
 
 	var buf bytes.Buffer
@@ -64,5 +64,5 @@ func (d *Document) Compile(dir string) (err error) {
 		subDir = ""
 	}
 
-	return d.WriteFile(dir, subDir)
+	return d.WriteFile(dir, subDir, output)
 }

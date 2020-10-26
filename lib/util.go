@@ -56,13 +56,13 @@ func Contains(slice []string, str string) bool {
 }
 
 // WriteFile writes a file to a `dir`
-func (d *Document) WriteFile(dir, subDir string) (err error) {
+func (d *Document) WriteFile(dir, subDir, output string) (err error) {
 	content := string(regexp.MustCompile("(?i){{ *body *}}").ReplaceAll(d.Layout, d.Content))
 	content, err = MinifyHTML(content)
 
-	outputFolder := fmt.Sprintf("%s%sdist%s%s", dir, pathSeperator, pathSeperator, subDir)
-	outputFile := fmt.Sprintf("%s%s%s", outputFolder, pathSeperator,
-		strings.ReplaceAll(d.FileInfo.Name(), ".md", ".html"))
+	outputFolder := dir + pathSeperator + output + pathSeperator + subDir
+	outputFile := outputFolder + pathSeperator +
+		strings.ReplaceAll(d.FileInfo.Name(), ".md", ".html")
 
 	err = os.MkdirAll(outputFolder, os.ModePerm)
 	return ioutil.WriteFile(outputFile, []byte(content), 0600)
