@@ -54,7 +54,7 @@ func (d *Document) Compile(dir string) (err error) {
 	err = goldmark.Convert(d.Content, &buf)
 
 	d.Content = buf.Bytes()
-	d.Content = CompileTemplate(d.FileInfo.Name(), d.Content)
+	d.Content, err = CompileTemplate(d.FileInfo.Name(), d.Content)
 
 	path, err := filepath.Rel(dir, d.FullPath)
 	folder := strings.Split(path, string(filepath.Separator))[0]

@@ -67,7 +67,7 @@ Scarecrow does not yet support custom layouts per file. We are interested in pos
 
 * [ ] Blogging support.
 * [X] Use `layout.html` to determine file content and output to a `dist/` directory.
-* [X] Pass to `html/template` before outputting.
+* [X] Pass to a Mustache compiler before outputting.
 * [ ] Front matter support and parsing.
 * [X] HTML output minifying.
 * [X] Automatically create required directories on output.

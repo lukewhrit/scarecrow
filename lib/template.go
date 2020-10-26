@@ -17,20 +17,22 @@
 package lib
 
 import (
-	"bytes"
-	"html/template"
-	"log"
+	"github.com/cbroglie/mustache"
 )
 
+var hash = map[string]interface{}{
+	"c": "world",
+	"repo": []map[string]string{
+		{"name": "resque"},
+		{"name": "hub"},
+		{"name": "rip"},
+	},
+}
+
 // CompileTemplate compiles an HTML template
-func CompileTemplate(name string, raw []byte) []byte {
-	tmpl, err := template.New(name).Parse(string(raw))
-	Handle(err)
+func CompileTemplate(name string, raw []byte) ([]byte, error) {
+	rawString := string(raw)
+	data, err := mustache.Render(rawString, hash)
 
-	var compiledTemplate bytes.Buffer
-	if err := tmpl.Execute(&compiledTemplate, nil); err != nil {
-		log.Fatal(err.Error())
-	}
-
-	return compiledTemplate.Bytes()
+	return []byte(data), err
 }
