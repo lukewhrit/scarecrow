@@ -31,7 +31,7 @@ import (
 
 var (
 	clean              bool
-	output             string
+	dest               string
 	files              []string
 	allowedDirectories = []string{"pages", "posts"}
 )
@@ -46,19 +46,10 @@ var makeCmd = &cobra.Command{
 		dir, err := filepath.Abs(args[0]) // Get project base directory
 		lib.Handle(err)
 
-		// Walk project directory and add files to slice
-		lib.Handle(godirwalk.Walk(dir, &godirwalk.Options{
-			Callback: func(path string, de *godirwalk.Dirent) error {
-				files = append(files, path)
-				return nil
-			},
-			Unsorted: true,
-		}))
-
-		output, err = filepath.Abs(filepath.Join(dir, output))
+		dest, err = filepath.Abs(filepath.Join(dir, dest))
 		lib.Handle(err)
 
-		if err := lib.MoveAssets(dir, output); err != nil {
+		if err := lib.MoveAssets(dir, dest); err != nil {
 			log.Fatal(err.Error())
 		}
 
@@ -66,38 +57,43 @@ var makeCmd = &cobra.Command{
 			dir, string(filepath.Separator)))
 		lib.Handle(err)
 
-		// Loop over every file in directory and compile
-		for _, filePath := range files {
-			info, err := os.Stat(filePath)
-			lib.Handle(err)
+		// Walk project directory and compile files
+		lib.Handle(godirwalk.Walk(dir, &godirwalk.Options{
+			Callback: func(path string, de *godirwalk.Dirent) error {
+				if !de.IsDir() || de.Name() != layoutFileName {
+					relPath, err := filepath.Rel(dir, path)
+					tlDir := strings.Split(relPath, string(filepath.Separator))[0]
 
-			// Make sure we don't try to build directories or the layout file
-			if !info.IsDir() || info.Name() != layoutFileName {
-				// Don't try to compile any files with an invalid extension, such as CSS or JS files.
-				if lib.HasExt(info.Name(), "md") {
-					path, err := filepath.Rel(dir, filePath)
-					lib.Handle(err)
-
-					// Only compile files within the allowed directories
-					if !lib.Contains(allowedDirectories,
-						strings.Split(path, string(filepath.Separator))[0]) {
-						continue
+					if err != nil {
+						return err
 					}
 
-					doc := &lib.Document{
-						FileInfo: info,
-						Content:  []byte{}, // Should be empty, `Compile` method will fill it in.
-						Layout:   layout,
-						FullPath: filePath,
+					if !lib.Contains(allowedDirectories, tlDir) {
+						return nil
 					}
 
-					// Compile the document
-					if err := doc.Compile(dir); err != nil {
-						log.Fatal(err.Error())
+					if filepath.Ext(de.Name()) == ".md" {
+						fileInfo, err := os.Stat(path)
+
+						if err != nil {
+							return err
+						}
+
+						doc := &lib.Document{
+							FileInfo: fileInfo,
+							Content:  []byte{},
+							Layout:   layout,
+							FullPath: path,
+						}
+
+						return doc.Compile(dir)
 					}
 				}
-			}
-		}
+
+				return nil
+			},
+			Unsorted: true,
+		}))
 	},
 }
 
@@ -105,5 +101,5 @@ func init() {
 	rootCmd.AddCommand(makeCmd)
 
 	makeCmd.Flags().BoolVarP(&clean, "clean", "c", true, "cleanup directory before saving new output")
-	makeCmd.Flags().StringVarP(&output, "output", "o", "./dist", "send output to a custom directory")
+	makeCmd.Flags().StringVarP(&dest, "dest", "o", "./dist", "send output to a custom directory")
 }
