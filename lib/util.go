@@ -22,6 +22,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -56,7 +57,7 @@ func Contains(slice []string, str string) bool {
 
 // WriteFile writes a file to a `dir`
 func (d *Document) WriteFile(dir, subDir string) (err error) {
-	content := strings.ReplaceAll(string(d.Layout), "<scarecrow-body />", string(d.Content))
+	content := string(regexp.MustCompile("(?i){{ *body *}}").ReplaceAll(d.Layout, d.Content))
 	content, err = MinifyHTML(content)
 
 	outputFolder := fmt.Sprintf("%s%sdist%s%s", dir, pathSeperator, pathSeperator, subDir)

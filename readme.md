@@ -11,7 +11,7 @@ The entire idea behind Scarecrow is that it **stays out of your way**. Often sta
 * Easy to customize.
 * Allows you to write your site's content in Markdown. 
 * Built-in blogging support.
-* Supports Go's `html/template` in Markdown.
+* Supports Mustache templating in Markdown files.
 * Compiles down to purely static files; JavaScript-free.
 * Fast; Scarecrow compiles sites faster than Hugo or Jekyll.
 
@@ -49,6 +49,8 @@ Scarecrow uses a very simple directory structure that allows for easy customizat
 
 ```
 .
+ ├── assets/
+ │    └── ...
  ├── posts/
  │    └── hello-world.md
  ├── pages/
@@ -57,11 +59,15 @@ Scarecrow uses a very simple directory structure that allows for easy customizat
  └── layout.html
 ```
 
-`pages/index.md` is pretty ordinary, `layout.html` however has some special things going on with it. `layout.html` serves as the base HTML file for all content on your site. You should define the styles and layout of your site here.
+`pages/index.md` is an ordinary markdown file, `layout.html` however has some special things going on with it. `layout.html` serves as the base HTML file for all content on your site. You will define the layout of your site here.
 
-Scarecrow will inject your sites content into this file wherever it finds a `<scarecrow-body>` or `<scarecrow-body />` tag.
+Scarecrow will inject your sites content into this file wherever it finds the string `{{ body }}`.
+
+Multiple forms of this string will also work, such as `{{Body}}` or `{{body}}`.
 
 Scarecrow does not yet support custom layouts per file. We are interested in possibly implementing this in the future.
+
+The `assets/` directory is special, it is the location where any images, styles or scripts belonging to your app should be placed. The folders contents are accessible in your scripts via the `~/` path. The contents of this directory are not transformed at all when compiled.
 
 ## TODO
 
