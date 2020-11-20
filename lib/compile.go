@@ -21,6 +21,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/yuin/goldmark"
@@ -46,23 +47,46 @@ var md = goldmark.New(
 	),
 )
 
+func (d *Document) compileLayout() []byte {
+	re := regexp.MustCompile("(?i){{ *body *}}")
+	return re.ReplaceAll(d.Layout, d.Content)
+}
+
+func (d *Document) compileMarkdown() ([]byte, error) {
+	var buf bytes.Buffer
+	err := goldmark.Convert(d.Content, &buf)
+	return buf.Bytes(), err
+}
+
+func (d *Document) writeFile(dir, subDir, output string) (err error) {
+	content := d.compileLayout()
+	content, err = MinifyHTML(content)
+
+	outputFolder := filepath.Join(dir, output, subDir)
+	outputFile := filepath.Join(
+		outputFolder,
+		strings.ReplaceAll(d.FileInfo.Name(), ".md", ".html"),
+	)
+
+	err = os.MkdirAll(outputFolder, os.ModePerm)
+	return ioutil.WriteFile(outputFile, []byte(content), 0600)
+}
+
 // Compile turns a markdown document into a fully-formed HTML file using a layout
 func (d *Document) Compile(dir, output string) (err error) {
 	d.Content, err = ioutil.ReadFile(d.FullPath)
-
-	var buf bytes.Buffer
-	err = goldmark.Convert(d.Content, &buf)
-
-	d.Content = buf.Bytes()
+	d.Content, err = d.compileMarkdown()
 	d.Content, err = CompileTemplate(d.FileInfo.Name(), d.Content)
 
 	path, err := filepath.Rel(dir, d.FullPath)
 	folder := strings.Split(path, string(filepath.Separator))[0]
 	subDir := folder
 
+	// Pages get sent to the root of the output directory instead of a
+	// sub-directory, like other files.
 	if folder == "pages" {
 		subDir = ""
 	}
 
-	return d.WriteFile(dir, subDir, output)
+	return d.writeFile(dir, subDir, output)
 }

@@ -24,14 +24,8 @@ import (
 	"github.com/karrick/godirwalk"
 )
 
-var (
-	files []string
-	info  os.FileInfo
-	de    os.FileInfo
-	data  []byte
-)
-
-// MoveAssets loads all asset files from directory and moves them into the `dist/` directory
+// MoveAssets loads all asset files from directory and moves them into the
+// `outputDir`.
 func MoveAssets(baseDir, outputDir string) (err error) {
 	dir := filepath.Join(baseDir, "assets")
 
@@ -39,32 +33,20 @@ func MoveAssets(baseDir, outputDir string) (err error) {
 		return err
 	}
 
-	if err := godirwalk.Walk(dir, &godirwalk.Options{
+	return godirwalk.Walk(dir, &godirwalk.Options{
 		Callback: func(path string, de *godirwalk.Dirent) (err error) {
-			files = append(files, path)
+			if de.IsDir() {
+				return
+			}
 
-			return nil
+			data, err := ioutil.ReadFile(path)
+			info, err := os.Stat(path)
+
+			output := filepath.Join(outputDir, info.Name())
+			err = os.MkdirAll(outputDir, os.ModePerm)
+
+			return ioutil.WriteFile(output, data, os.ModePerm)
 		},
 		Unsorted: true,
-	}); err != nil {
-		return err
-	}
-
-	for _, path := range files {
-		de, err = os.Stat(path)
-
-		if de.IsDir() {
-			continue
-		}
-
-		data, err = ioutil.ReadFile(path)
-		info, err = os.Stat(path)
-
-		output := filepath.Join(outputDir, info.Name())
-		err = os.MkdirAll(outputDir, os.ModePerm)
-
-		return ioutil.WriteFile(output, data, os.ModePerm)
-	}
-
-	return nil
+	})
 }

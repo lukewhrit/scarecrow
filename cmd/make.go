@@ -100,6 +100,19 @@ var makeCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(makeCmd)
 
-	makeCmd.Flags().BoolVarP(&clean, "clean", "c", true, "cleanup directory before saving new output")
-	makeCmd.Flags().StringVarP(&dest, "dest", "o", "./dist", "send output to a custom directory")
+	makeCmd.Flags().BoolVarP(
+		&clean,
+		"clean",
+		"c",
+		true,
+		"cleanup directory before saving new output",
+	)
+
+	makeCmd.Flags().StringVarP(
+		&dest,
+		"output",
+		"o",
+		"./dist",
+		"send output to a custom directory",
+	)
 }

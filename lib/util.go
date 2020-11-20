@@ -18,12 +18,8 @@ package lib
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
-	"os"
 	"path/filepath"
-	"regexp"
-	"strings"
 )
 
 var pathSeperator = string(filepath.Separator)
@@ -53,17 +49,4 @@ func Contains(slice []string, str string) bool {
 	}
 
 	return false
-}
-
-// WriteFile writes a file to a `dir`
-func (d *Document) WriteFile(dir, subDir, output string) (err error) {
-	content := string(regexp.MustCompile("(?i){{ *body *}}").ReplaceAll(d.Layout, d.Content))
-	content, err = MinifyHTML(content)
-
-	outputFolder := dir + pathSeperator + output + pathSeperator + subDir
-	outputFile := outputFolder + pathSeperator +
-		strings.ReplaceAll(d.FileInfo.Name(), ".md", ".html")
-
-	err = os.MkdirAll(outputFolder, os.ModePerm)
-	return ioutil.WriteFile(outputFile, []byte(content), 0600)
 }

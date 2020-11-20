@@ -1,5 +1,9 @@
 ### Go ###
 
+# Environment files
+.vscode
+.idea
+
 # Binaries for programs and plugins
 bin/
 *.exe
