@@ -15,15 +15,32 @@ The entire idea behind Scarecrow is that it **stays out of your way**. Often sta
 * Compiles down to purely static files; JavaScript-free.
 * Fast; Scarecrow compiles sites faster than Hugo or Jekyll.
 
+## Table of Contents
+
+- [🐦 Scarecrow](#-scarecrow)
+	- [Table of Contents](#table-of-contents)
+	- [Installation](#installation)
+	- [Documentation](#documentation)
+		- [Usage](#usage)
+		- [Directory Structure](#directory-structure)
+		- [Asset Handling](#asset-handling)
+		- [Templates](#templates)
+			- [Scarecrow-specific variables](#scarecrow-specific-variables)
+	- [TODO](#todo)
+	- [Contributors](#contributors)
+	- [License](#license)
+
 ## Installation
 
-Scarecrow is alpha software, it shouldn't be used in production. However, you can still install Scarecrow right now and use it if you wish. Use this command: 
+Scarecrow is pre-alpha software, it shouldn't be used in production or really even testing. However, you can still install Scarecrow right now and use it if you wish. Use this command: 
 
 ```
 $ go get -v -u github.com/lukewhrit/scarecrow
 ```
 
-## Usage
+## Documentation
+
+### Usage
 
 ```
 $ scarecrow --help
@@ -43,7 +60,7 @@ Flags:
 Use "scarecrow [command] --help" for more information about a command.
 ```
 
-## Directory Structure
+### Directory Structure
 
 Scarecrow uses a very simple directory structure that allows for easy customization and development. The only required files are `layout.html` and `pages/index.md`.
 
@@ -59,25 +76,56 @@ Scarecrow uses a very simple directory structure that allows for easy customizat
  └── layout.html
 ```
 
-`pages/index.md` is an ordinary markdown file, `layout.html` however has some special things going on with it. `layout.html` serves as the base HTML file for all content on your site. You will define the layout of your site here.
+`pages/index.md` is an ordinary markdown file.
+
+However, `layout.html` holds special significance. `layout.html` serves as the base HTML file for all content on your site. You will define the layout of your site here.
 
 Scarecrow will inject your sites content into this file wherever it finds the string `{{ body }}`.
 
-Multiple forms of this string will also work, such as `{{Body}}` or `{{body}}`.
+Other forms of this string will also work, such as `{{Body}}` or `{{body}}`.
 
-Scarecrow does not yet support custom layouts per file. We are interested in possibly implementing this in the future.
+Scarecrow does not yet support custom layouts per file. This may however change in the future.
 
-The `assets/` directory is special, it is the location where any images, styles or scripts belonging to your app should be placed. The folders contents are accessible in your scripts via the `~/` path. The contents of this directory are not transformed at all when compiled.
+Although the `posts/` directory is 100% optional, it does hold special significance in that an array of its files and their front-matter are compiled into a `posts` object available to Mustache templates. For more information see the [Scarecrow-specific Variables](#scarecrow-specific-variables) section of the Templates documentation.
+
+### Asset Handling
+
+In the same fashion as many other static site generators, assets are held in a specific folder. This can cause issues with pages in sub-folders.
+
+The afore mentioned specific folder is the `/assets/` directory, in this directory any and all images, styles, or scripts pertaining to your website should be placed.
+
+The contents of the `/assets/` directory are not modified at all, with the only exceptions being CSS and JS. These assets are minified during the compile sequence.
+
+To solve this, most static site generators implement a symbol which will reference their assets directory in paths and Scarecrow is no different.
+
+Scarecrow implements a `+` symbol that references the assets directory.
+
+### Templates
+
+Scarecrow implements support for the Mustache template system via [Chris Broglie's library](https://github.com/cbroglie/mustache).
+
+The library currently implements most of the specification, however it lacks any support for lambdas.
+
+Please note that the `layout.html` file does not support Mustache templates in any form, and only allows for the Mustache-like `{{ body }}` tag but this is **not** Mustache.
+
+Documentation and reference material on Mustache are available on the [mustache.github.io website](https://mustache.github.io/mustache.5.html).
+
+#### Scarecrow-specific variables
+
+Scarecrow implements some custom variables available to all Mustache templates. These variables contain values like an array of all posts in the application.
 
 ## TODO
 
 * [ ] Blogging support.
 * [X] Use `layout.html` to determine file content and output to a `dist/` directory.
-* [X] Pass to a Mustache compiler before outputting.
+* [X] Passing to a Mustache compiler before outputting.
 * [ ] Front matter support and parsing.
 * [X] HTML output minifying.
 * [X] Automatically create required directories on output.
-* [X] System for CSS, fonts, and JS assets.
+* [ ] Asset Handling
+  * [ ] Minifying of CSS and JS assets.
+  * [ ] Support for referencing the asset directory in HTML files via `+` symbol.
+  * [X] Basic asset handling (moving assets to output directory, etc.).
 
 ## Contributors
 
