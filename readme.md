@@ -1,6 +1,6 @@
 # 🐦 Scarecrow
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/lukewhrit/scarecrow)](https://goreportcard.com/report/github.com/lukewhrit/scarecrow) [![Documentation](https://pkg.go.dev/badge/github.com/lukewhrit/scarecrow)](https://pkg.go.dev/github.com/lukewhrit/scarecrow)
+[![Go Report Card](https://goreportcard.com/badge/github.com/avaaxcx/scarecrow)](https://goreportcard.com/report/github.com/avaaxcx/scarecrow) [![Documentation](https://pkg.go.dev/badge/github.com/avaaxcx/scarecrow)](https://pkg.go.dev/github.com/avaaxcx/scarecrow)
 
 Scarecrow is a simple static site generator.
 
