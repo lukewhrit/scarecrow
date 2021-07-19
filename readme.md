@@ -131,7 +131,7 @@ Scarecrow implements some custom variables available to all Mustache templates. 
 
 Scarecrow is built entirely from contributors to the Open-Source community. Here are some of the notable contributors to Scarecrow:
 
-* [Luke Whrit <lukewhrit@gmail.com>](https://github.com/lukewhrit) - Lead developer and maintainer.
+* [Ava Whrit <lukewhrit@gmail.com>](https://github.com/avaaxcx) - Lead developer and maintainer.
 
 Scarecrow is **not** supported by and has no interest in pandering to any corporation.
 
