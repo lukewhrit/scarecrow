@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Luke Whrit <lukewhrit@gmail.com>
+ * Copyright © 2020-2022 Luke Whritenour <lukewhrit@proton.me>
 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,13 +40,13 @@ func Execute() {
 }
 
 /*
- * Here we'll define our flags and configuration settings for Cobra.
- * Cobra supports both persistent flags and local flags.
+* Here we'll define our flags and configuration settings for Cobra.
+* Cobra supports both persistent flags and local flags.
 
- * Persistent flags, which, if defined here, will be
- * global for your application.
+* Persistent flags, which, if defined here, will be
+* global for your application.
 
- * Local flags, however, will only run when this
- * action is called directly.
+* Local flags, however, will only run when this
+* action is called directly.
  */
 func init() {}
